@@ -4,28 +4,27 @@ import cors from "cors";
 
 import connectDB from "./config/db.js";
 import noteRoutes from "./routes/noteRoutes.js";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
-connectDB();
-
 const app = express();
 
-app.use(cors());
+connectDB();
+
+app.use(
+  cors({
+    origin: "https://notesmakingapp.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  })
+);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("API is running");
+  res.send("API Running");
 });
 
 app.use("/api/notes", noteRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+export default app;
